@@ -1,0 +1,52 @@
+local Lighting = game:GetService("Lighting")
+local TweenService = game:GetService("TweenService")
+
+-- Lighting boost to brighten terrain/characters
+Lighting.Ambient = Color3.new(1, 1, 1)
+Lighting.OutdoorAmbient = Color3.new(1, 1, 1)
+Lighting.Brightness = 2
+
+-- Set a bright neutral skybox
+local sky = Instance.new("Sky")
+sky.SkyboxBk = "rbxassetid://642432380"
+sky.SkyboxDn = "rbxassetid://642432380"
+sky.SkyboxFt = "rbxassetid://642432380"
+sky.SkyboxLf = "rbxassetid://642432380"
+sky.SkyboxRt = "rbxassetid://642432380"
+sky.SkyboxUp = "rbxassetid://642432380"
+sky.Parent = Lighting
+
+-- First effect: rainbow tint (affects whole screen but mainly sky)
+local rainbowEffect = Instance.new("ColorCorrectionEffect")
+rainbowEffect.Name = "RainbowSky"
+rainbowEffect.Parent = Lighting
+rainbowEffect.Brightness = 0
+rainbowEffect.Contrast = 0
+
+-- Second effect: counter-effect to keep world visible
+local brightnessFix = Instance.new("ColorCorrectionEffect")
+brightnessFix.Name = "VisibilityBoost"
+brightnessFix.TintColor = Color3.new(1, 1, 1)
+brightnessFix.Brightness = 0.2  -- Adjust as needed
+brightnessFix.Saturation = 0.1
+brightnessFix.Parent = Lighting
+
+-- Rainbow colors
+local colors = {
+	Color3.fromRGB(255, 0, 0),
+	Color3.fromRGB(255, 127, 0),
+	Color3.fromRGB(255, 255, 0),
+	Color3.fromRGB(0, 255, 0),
+	Color3.fromRGB(0, 0, 255),
+	Color3.fromRGB(75, 0, 130),
+	Color3.fromRGB(148, 0, 211)
+}
+
+-- Cycle through rainbow smoothly
+while true do
+	for _, color in ipairs(colors) do
+		local tween = TweenService:Create(rainbowEffect, TweenInfo.new(2), {TintColor = color})
+		tween:Play()
+		tween.Completed:Wait()
+	end
+end
